@@ -21,4 +21,27 @@ typedef struct philosopher {
  pthread_mutex_t *fourchettes;
 } Philosopher;
 
+typedef struct t_args 
+{
+    int last_meal_time;
+    int philo_nbr;
+    int time_to_die;
+    int time_to_eat;
+    int time_to_sleep;
+    int max_nbr_eat;
+    int end;
+    pthread_mutex_t	monitor_mutex;
+}               t_args;
+
+typedef struct t_philo
+{
+    int philo_nbr;
+    int last_time_meal;
+    int nbr_eaten;
+    pthread_mutex_t *right_fork;
+    pthread_mutex_t *left_fork;
+    int first_aper;
+    pthread_t	thread_id;
+    t_args *args;
+}               t_philo;
 #endif
