@@ -174,36 +174,70 @@ void	*logique(void *_philo)
 	return (NULL);
 }
 
-bool launch_thread_and_join(t_args *args, t_philo *philos, pthread_mutex_t *forks)
+static inline void	all_have_eaten(t_args *args)
 {
-    int i;
+	args->end = true;
+	printf("Every Philosopher had %d meals!\n", args->nbr_eaten);
+	pthread_mutex_unlock(&args->monitor_mutex);
+}
 
-    i = 0;
-    while (i < args->philo_nbr)
-    {
-        philos->first_aper = get_time();
-        if (pthread_create(&philos[i].thread_id, NULL, logique, (void *)&philos[i]) != 0)
-            return false;
-        i++;
-    }
-    i = 0;
-    while (true)
+static inline bool	starved(t_philo *philo)
+{
+	return (((get_time() - philo->last_time_meal) >= philo->args->time_to_die));
+}
+
+static bool	is_philo_dead(t_args *args, t_philo *philo, int *satisfied_philos)
+{
+	if (args->max_nbr_eat > 0 && philo->nbr_eaten >= args->max_nbr_eat)
+		*satisfied_philos += 1;
+	if (starved(philo))
 	{
-		while (i < args->philo_nbr)
-		{
-			if (is_die(&philos[i]))
-            {
-                monitoring(&philos[i], DEAD);
-				return (0);
-            }
-            i++;
-		}
-        usleep(10000);
+		pthread_mutex_unlock(&args->monitor_mutex);
+		monitoring(philo, DEAD);
+		pthread_mutex_lock(&args->monitor_mutex);
+		args->end = true;
+		pthread_mutex_unlock(&args->monitor_mutex);
+		return (true);
 	}
-    i = -1;
-    while (++i < args->philo_nbr)
+	return (false);
+}
+
+static void	supervise(t_philo *philos, t_args *args)
+{
+	int	satisfied_philos;
+	int	i;
+
+	satisfied_philos = 0;
+	while (true)
+	{
+		i = -1;
+		pthread_mutex_lock(&args->monitor_mutex);
+		while (++i < args->philo_nbr)
+		{
+			if (is_philo_dead(args, &philos[i], &satisfied_philos))
+				return ;
+		}
+		if (satisfied_philos == args->philo_nbr)
+			return (all_have_eaten(args));
+		pthread_mutex_unlock(&args->monitor_mutex);
+	}
+}
+
+bool	launch_threads_and_join(t_args *args, t_philo *philos, pthread_mutex_t *forks)
+{
+	int	i;
+
+	i = -1;
+	while (++i < args->philo_nbr)
+	{
+		philos[i].first_aper = get_time();
+		pthread_create(&philos[i].thread_id, NULL, logique, (void *)&philos[i]);
+	}
+	supervise(philos, args);
+	i = -1;
+	while (++i < args->philo_nbr)
 		pthread_join(philos[i].thread_id, NULL);
-    return (true);
+	return (true);
 }
 
 int main(int argc, char *argv[])
@@ -216,7 +250,7 @@ int main(int argc, char *argv[])
     init_args(&args, argv, argc);
     forks = init_fork(&args);
     philos = init_philo(&args, forks);
-    if (!launch_thread_and_join(&args, philos, forks))
+    if (!launch_threads_and_join(&args, philos, forks))
     {
         fprintf(stderr, "Error launching threads.\n");
         return 1;
