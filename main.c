@@ -6,7 +6,7 @@
 /*   By: fboughan <fboughan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/29 12:40:22 by nnuno-ca          #+#    #+#             */
-/*   Updated: 2024/03/13 14:11:28 by fboughan         ###   ########.fr       */
+/*   Updated: 2024/03/14 13:31:44 by fboughan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 static bool	is_philo_dead(t_args *args, t_philo *philo, int *satisfied_philos);
 static inline void	all_have_eaten(t_args *args);
 
-#define TAKE_FORK_STR "has taken a fork 🍴\n"
-#define DROP_FORK_STR "has dropped a fork 🍴\n"
-#define EAT_STR "is eating 😋\n"
-#define THINK_STR "is thinking 🤔\n"
-#define SLEEP_STR "is sleeping 😴\n"
-#define DEAD_STR "is dead 😵\n"
+#define TAKE_FORK_STR "has taken a fork \n"
+#define DROP_FORK_STR "has dropped a fork \n"
+#define EAT_STR "is eating \n"
+#define THINK_STR "is thinking \n"
+#define SLEEP_STR "is sleeping \n"
+#define DEAD_STR "is dead \n"
 
 static void	free_forks_until(pthread_mutex_t *forks, int until)
 {
@@ -46,12 +46,8 @@ pthread_mutex_t	*init_forks(t_args *args)
 	i = 0;
 	while (i < args->nbr_of_philo)
 	{
-		if (pthread_mutex_init(&forks[i], NULL) != 0)
-		{
-			free_forks_until(forks, i);
-			
-		}
-		i += 1;
+		pthread_mutex_init(&forks[i], NULL);
+		i++;
 	}
 	return (forks);
 }
@@ -103,13 +99,9 @@ bool	init_args(t_args *args, char **argv)
 	if (argv[5])
 		args->must_eat_times = ft_atoi(argv[5]);
 	if (args->nbr_of_philo == 0 || args->must_eat_times == 0)
-	{
 		return (false);
-	}
 	if (pthread_mutex_init(&args->monitoring_mutex, NULL) != 0)
-	{
 		return (false);
-	}
 	args->simulation_should_end = false;
 	return (true);
 }
@@ -221,6 +213,32 @@ void	monitoring(t_philo *philo, t_event_id event_id)
 	pthread_mutex_unlock(&philo->args->monitoring_mutex);
 }
 
+void	destroy(t_args *args, pthread_mutex_t *forks, t_philo *philos)
+{
+	int	i;
+
+	if (args)
+		pthread_mutex_destroy(&args->monitoring_mutex);
+	if (forks)
+	{
+		i = 0;
+		while (i < args->nbr_of_philo)
+		{
+			pthread_mutex_destroy(&forks[i]);
+			philos[i].left_fork = NULL;
+			philos[i].right_fork = NULL;
+			i += 1;
+		}
+		free(forks);
+		forks = NULL;
+	}
+	if (philos)
+	{
+		free(philos);
+		philos = NULL;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_args			args;
@@ -233,7 +251,7 @@ int	main(int argc, char **argv)
 	philos = init_philos(&args, forks);
 	if (!launch_threads_and_join(&args, philos, forks))
 		return (EXIT_FAILURE);
-	//destroy(&args, forks, philos);
+	destroy(&args, forks, philos);
 	return (EXIT_SUCCESS);
 }
 
@@ -271,20 +289,6 @@ bool	launch_threads_and_join(t_args *args, t_philo *philos, pthread_mutex_t *for
 		
 	}
     supervise(args, philos);
-	// satisfied_philos = 0;
-	// while (true)
-	// {
-	// 	i = -1;
-	// 	pthread_mutex_lock(&args->monitoring_mutex);
-	// 	while (++i < args->nbr_of_philo)
-	// 	{
-	// 		if (is_philo_dead(args, &philos[i], &satisfied_philos))
-	// 			return ;
-	// 	}
-	// 	if (satisfied_philos == args->nbr_of_philo)
-	// 		return (all_have_eaten(args));
-	// 	pthread_mutex_unlock(&args->monitoring_mutex);
-	// }
 	i = -1;
 	while (++i < args->nbr_of_philo)
 		pthread_join(philos[i].t_id, NULL);
