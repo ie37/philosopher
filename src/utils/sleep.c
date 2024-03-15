@@ -14,6 +14,6 @@
 
 void	_sleep(t_philo *philo)
 {
-	monitoring(philo, SLEEP);
-	usleep(philo->args->time_to_sleep * MICROSEC);
+	monitoring_2(philo, "is sleeping \n");
+	usleep(philo->args->time_to_sleep * 1000);
 }

@@ -12,7 +12,7 @@
 
 #include "../../includes/philosopher.h"
 
-static bool	is_all_digits(char **argv)
+bool	is_all_digits(char **argv)
 {
 	int	i;
 	int	j;
@@ -32,9 +32,3 @@ static bool	is_all_digits(char **argv)
 	return (true);
 }
 
-bool	valid_args(int argc, char **argv)
-{
-	if ((argc != 5 && argc != 6) || !is_all_digits(argv))
-		return (false);
-	return (true);
-}

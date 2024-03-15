@@ -12,7 +12,7 @@
 
 #include "../../includes/philosopher.h"
 
-bool	launch_threads_and_join(t_args *args, t_philo *philos)
+static void create_thread(t_args *args, t_philo *philos)
 {
 	int	i;
 
@@ -22,6 +22,13 @@ bool	launch_threads_and_join(t_args *args, t_philo *philos)
 		philos[i].start_time = get_time();
 		pthread_create(&philos[i].t_id, NULL, logique, (void *)&philos[i]);
 	}
+}
+
+bool	launch_threads_and_join(t_args *args, t_philo *philos)
+{
+	int	i;
+
+	create_thread(args, philos);
 	supervise(args, philos);
 	i = -1;
 	while (++i < args->nbr_of_philo)

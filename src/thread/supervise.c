@@ -28,7 +28,12 @@ void	supervise(t_args *args, t_philo *philos)
 				return ;
 		}
 		if (satisfied_philos == args->nbr_of_philo)
-			return (all_have_eaten(args));
+		{
+			args->simulation_should_end = true;
+			printf("Every Philosopher have meals %d times!\n", args->must_eat_times);
+			pthread_mutex_unlock(&args->monitoring_mutex);
+			return ;
+		}
 		pthread_mutex_unlock(&args->monitoring_mutex);
 	}
 }

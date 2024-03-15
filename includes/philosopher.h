@@ -22,18 +22,13 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define MICROSEC 1000
+
 # define INVALID_ARGS_ERR "Invalid arguments"
 # define THREAD_CREATE_ERR "Failed to create a thread"
 # define THREAD_JOIN_ERR "Failed to join a thread"
 # define MALLOC_ERR "malloc() failed to allocate memory"
 # define MUTEX_INIT_ERR "Failed to initialize mutex"
-# define TAKE_FORK_STR "has taken a fork \n"
-# define DROP_FORK_STR "has dropped a fork \n"
-# define EAT_STR "is eating \n"
-# define THINK_STR "is thinking \n"
-# define SLEEP_STR "is sleeping \n"
-# define DEAD_STR "is dead \n"
+
 
 typedef struct s_args
 {
@@ -72,8 +67,8 @@ pthread_mutex_t		*init_forks(t_args *args);
 t_philo				*init_philos(t_args *args, pthread_mutex_t *forks_array);
 bool				launch_threads_and_join(t_args *args, t_philo *philos);
 void				*logique(void *_philo);
-void				monitoring(t_philo *philo, t_event_id event_id);
-bool				valid_args(int argc, char **argv);
+// void				monitoring(t_philo *philo, t_event_id event_id);
+// bool				valid_args(int argc, char **argv);
 bool				init_args(t_args *args, char **argv);
 suseconds_t			get_time(void);
 int					panic(t_args *args, pthread_mutex_t *forks, t_philo *philos,
@@ -84,12 +79,14 @@ void				destroy(t_args *args, pthread_mutex_t *forks,
 void				_sleep(t_philo *philo);
 int					ft_atoi(const char *nptr);
 void				eat(t_philo *philo);
-void				all_have_eaten(t_args *args);
+// void				all_have_eaten(t_args *args);
 bool				is_philo_dead(t_args *args, t_philo *philo,
 						int *satisfied_philos);
-bool				starved(t_philo *philo);
+// bool				starved(t_philo *philo);
 void				get_fork(t_philo *philo);
 void				drop_fork(t_philo *philo);
 void				supervise(t_args *args, t_philo *philos);
+void monitoring_2(t_philo *philo, char *str);
+bool	is_all_digits(char **argv);
 
 #endif

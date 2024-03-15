@@ -12,19 +12,14 @@
 
 #include "../../includes/philosopher.h"
 
-void	monitoring(t_philo *philo, t_event_id event_id)
+void monitoring_2(t_philo *philo, char *str)
 {
-	suseconds_t	timestamp;
-	const char	*events[6] = {DEAD_STR, EAT_STR, THINK_STR, SLEEP_STR,
-		TAKE_FORK_STR, DROP_FORK_STR};
-
 	pthread_mutex_lock(&philo->args->monitoring_mutex);
 	if (philo->args->simulation_should_end)
 	{
 		pthread_mutex_unlock(&philo->args->monitoring_mutex);
 		return ;
 	}
-	timestamp = get_time() - philo->start_time;
-	printf("%ld %d %s", timestamp, philo->philo_nbr, events[event_id]);
+	printf("%ld %d %s", (get_time() - philo->start_time), philo->philo_nbr, str);
 	pthread_mutex_unlock(&philo->args->monitoring_mutex);
 }

@@ -18,7 +18,7 @@ int	main(int argc, char **argv)
 	pthread_mutex_t	*forks;
 	t_philo			*philos;
 
-	if (!init_args(&args, argv) || !valid_args(argc, argv))
+	if (((argc != 5 && argc != 6) || !is_all_digits(argv)) || !init_args(&args, argv))
 		return (EXIT_FAILURE);
 	forks = init_forks(&args);
 	philos = init_philos(&args, forks);
