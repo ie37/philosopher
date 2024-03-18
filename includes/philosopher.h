@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fboughan <fboughan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/29 12:40:22 by fboughan          #+#    #+#             */
-/*   Updated: 2024/03/14 14:48:13 by fboughan         ###   ########.fr       */
+/*   Created: 2024/03/12 12:40:22 by fboughan          #+#    #+#             */
+/*   Updated: 2024/03/18 11:51:36 by fboughan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-
-# define INVALID_ARGS_ERR "Invalid arguments"
-# define THREAD_CREATE_ERR "Failed to create a thread"
-# define THREAD_JOIN_ERR "Failed to join a thread"
-# define MALLOC_ERR "malloc() failed to allocate memory"
-# define MUTEX_INIT_ERR "Failed to initialize mutex"
 
 
 typedef struct s_args
@@ -79,10 +73,8 @@ void				destroy(t_args *args, pthread_mutex_t *forks,
 void				_sleep(t_philo *philo);
 int					ft_atoi(const char *nptr);
 void				eat(t_philo *philo);
-// void				all_have_eaten(t_args *args);
 bool				is_philo_dead(t_args *args, t_philo *philo,
 						int *satisfied_philos);
-// bool				starved(t_philo *philo);
 void				get_fork(t_philo *philo);
 void				drop_fork(t_philo *philo);
 void				supervise(t_args *args, t_philo *philos);

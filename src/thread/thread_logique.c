@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fboughan <fboughan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/29 12:40:22 by fboughan          #+#    #+#             */
-/*   Updated: 2024/03/14 14:51:51 by fboughan         ###   ########.fr       */
+/*   Created: 2024/03/12 12:40:22 by fboughan          #+#    #+#             */
+/*   Updated: 2024/03/18 13:09:20 by fboughan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ void	get_fork(t_philo *philo)
 	if (philo->philo_nbr % 2 == 0)
 	{
 		pthread_mutex_lock(philo->left_fork);
-		monitoring_2(philo, "has taken left fork \n");
+		monitoring_2(philo, "has taken fork \n");
 		pthread_mutex_lock(philo->right_fork);
-		monitoring_2(philo, "has taken right fork \n");
+		monitoring_2(philo, "has taken fork \n");
 	}
 	else
 	{
 		pthread_mutex_lock(philo->right_fork);
-		monitoring_2(philo, "has taken right fork \n");
+		monitoring_2(philo, "has taken fork \n");
 		pthread_mutex_lock(philo->left_fork);
-		monitoring_2(philo, "has taken left fork \n");
+		monitoring_2(philo, "has taken fork \n");
 	}
 }
 
@@ -35,16 +35,16 @@ void	drop_fork(t_philo *philo)
 	if (philo->philo_nbr % 2 == 0)
 	{
 		pthread_mutex_unlock(philo->left_fork);
-		monitoring_2(philo, "has dropped left fork \n");
+		monitoring_2(philo, "has dropped fork \n");
 		pthread_mutex_unlock(philo->right_fork);
-		monitoring_2(philo, "has dropped right fork \n");
+		monitoring_2(philo, "has dropped fork \n");
 	}
 	else
 	{
 		pthread_mutex_unlock(philo->right_fork);
-		monitoring_2(philo, "has dropped right fork \n");
+		monitoring_2(philo, "has dropped fork \n");
 		pthread_mutex_unlock(philo->left_fork);
-		monitoring_2(philo, "has dropped left fork \n");
+		monitoring_2(philo, "has dropped fork \n");
 	}
 }
 

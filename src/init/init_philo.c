@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fboughan <fboughan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/29 12:40:22 by fboughan          #+#    #+#             */
-/*   Updated: 2024/03/14 14:55:51 by fboughan         ###   ########.fr       */
+/*   Created: 2024/03/12 12:40:22 by fboughan          #+#    #+#             */
+/*   Updated: 2024/03/18 13:15:56 by fboughan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,16 @@ t_philo	*init_philos(t_args *args, pthread_mutex_t *forks_array)
 	{
 		philos[i].philo_nbr = i + 1;
 		philos[i].eaten_meals = 0;
-		philos[i].left_fork = &forks_array[i];
-		philos[i].right_fork = &forks_array[(i + 1) % args->nbr_of_philo];
+        if ((i + 1) % 2 == 0)
+        {
+            philos[i].right_fork = &forks_array[i];
+		    philos[i].left_fork = &forks_array[(i + 1) % args->nbr_of_philo];
+        }
+        else
+        {
+            philos[i].left_fork = &forks_array[i];
+            philos[i].right_fork = &forks_array[(i + 1) % args->nbr_of_philo];
+        }
 		philos[i].last_meal_time = get_time();
 		philos[i].args = args;
 		i += 1;
